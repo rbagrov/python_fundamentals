@@ -82,3 +82,7 @@ git commit --amend -s -m "Some message"
 ```
 git push origin issue/TAPC-120 -f
 ```
+* Do not commit in develop or master
+* When you are ready open Pull Request to develop, add your tags and wait for review
+* When your PR is approved, merge it to develop
+* Every now and then we will release in master
