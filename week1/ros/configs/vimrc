@@ -34,4 +34,6 @@ let python_highlight_all = 1
 set laststatus=2
 set background=dark
 set number
+
+" git clone https://github.com/nvie/vim-flake8.git ~/.vim/bundle/vim-flake8
 autocmd BufWritePost *.py call Flake8()
