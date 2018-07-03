@@ -5,4 +5,4 @@
 def validator(password):
     if len(password) <= 8 or password.isdigit() or password.isupper():
         return False
-    return True
+    return True 
