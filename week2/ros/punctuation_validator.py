@@ -8,9 +8,10 @@ def punctuation_validator(text):
         sentence.strip()
 
         # not working
+        print(sentence[0])
         if sentence[0].isupper():
-            print('ok')
-        print('no')
+            return True
+        return False
 
 
 
