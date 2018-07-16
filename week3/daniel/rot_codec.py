@@ -60,6 +60,6 @@ class ROTEncoderDecoder(object):
 
         print('Input String: {}'.format(word))
         print('ROT Index: {}'.format(rot))
-        print('ROT Encoded/Decoded String: {}'.format(result))
+        print('ROT Encoded/Decoded String: {} \n'.format(result))
 
         return result
