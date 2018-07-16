@@ -1,5 +1,6 @@
 import string
 
+
 class ROTEncoderDecoder(object):
 
     def calculate_encode_offset(self, index, offset):
@@ -28,8 +29,7 @@ class ROTEncoderDecoder(object):
 
         return offset
 
-
-    def rot_encode_decode(self, rot = 0, word = '', encode = True):
+    def rot_encode_decode(self, rot=0, word='', encode=True):
         result = ''
 
         if len(word) < 1:
@@ -41,22 +41,22 @@ class ROTEncoderDecoder(object):
             return None
 
         for i in range(len(word)):
-            uppercase = True            
+            uppercase = True
             index = string.ascii_uppercase.find(word[i])
-            
-            
+
             if index < 0:
                 uppercase = False
                 index = string.ascii_lowercase.find(word[i])
-            
+
             if index < 0:
-                result + word[i]
+                result += word[i]
                 continue
 
+            new_index = self.calculate_new_index(rot, index+1, encode)
             if uppercase:
-                result = result + string.ascii_uppercase[self.calculate_new_index(rot, index+1, encode)]
+                result += string.ascii_uppercase[new_index]
             else:
-                result = result + string.ascii_lowercase[self.calculate_new_index(rot, index+1, encode)]
+                result += string.ascii_lowercase[new_index]
 
         print('Input String: {}'.format(word))
         print('ROT Index: {}'.format(rot))
