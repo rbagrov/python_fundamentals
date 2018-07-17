@@ -1,11 +1,40 @@
 # -*-config: utf_8 -*-
 
+# Import library
+from functools import wraps
 
-# The function of which we read docstring
-def som_func():
+
+def doc_validation(func):
+    """"
+    Function decorator
+    Validates the docstring based on the given model
+    Records the results of the validation of the docstring in the log file
+    log.txt
+    """
+    @wraps(func)
+    def wrapper_function(*args, **kwargs):
+
+        m1 = func.__doc__.find("Accepts:")
+        m2 = func.__doc__.find("Returns:")
+        m3 = func.__doc__.find("Raises:")
+
+        if (m1 > -1 and m1 < m2 and m2 < m3):
+            validation_flag = 'Validation completed successfully !!!'
+        else:
+            validation_flag = 'Validation failed !!!'
+
+        with open('log.txt', 'w', encoding="utf-8") as log:
+            log.write(validation_flag)
+
+        return func(*args, **kwargs)
+
+    return wrapper_function
+
+
+@doc_validation
+def som_func():      # The function of which we read docstring
     """
     Calculate the square root of a number.
-
     Accepts:
     n: the number to get the square root of.
     Returns:
@@ -17,30 +46,5 @@ def som_func():
     pass
 
 
-def doc_validation(func):
-    """"
-    Function decorator
-    Records the results of the validation of the docstring in the log file
-    log.txt
-    """
-    def wrapper_function(*args, **kwargs):
-
-        doc_str = str(args)
-        if (doc_str.count('Accepts:') > 0) and (doc_str.find('Raises:') > 0) and (doc_str.find('Returns:') > 0):
-            validation_flag = 'Validation completed successfully !!!'
-        validation_flag = 'Validation failed !!!'
-
-        with open('log.txt', 'w', encoding="utf-8") as log:
-            log.write(validation_flag)
-
-            return func(*args, **kwargs)
-
-        return wrapper_function
-
-
-@doc_validation
-def get_doc(d_func):
-    return True
-
-
-get_doc(som_func.__doc__)
+# if __name__ == "main":
+som_func()

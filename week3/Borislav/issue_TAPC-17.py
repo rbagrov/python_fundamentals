@@ -6,6 +6,10 @@ from functools import wraps
 
 # Function decorator
 def func_ann_validation(func):
+    """
+    This is a function decorator that checks and validates
+    the annotation of other features
+    """
 
     @wraps(func)
     def wrapper_function(*args, **kwargs):
@@ -25,9 +29,13 @@ def func_ann_validation(func):
 # The function we need to validate
 @func_ann_validation
 def som_func(a: str, b: int) -> str:
+    """
+    This is the test function
+    """
 
     return('Done !!!')
 
 
-som_func('Borislav', 13)  # Called function with Correct Annotation
-som_func('Borislav', "13")  # Called function with Incorrect Anotation
+if __name__ == "main":
+    som_func('Borislav', 13)  # Called function with Correct Annotation
+    som_func('Borislav', "13")  # Called function with Incorrect Anotation
