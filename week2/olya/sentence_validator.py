@@ -2,7 +2,7 @@ import re
 
 def sentence_validator(text):
     """
-    Check if all sentences in the text are valid
+    Check  if all sentences in the text are valid
         Args: string
         Returns: true or false
     """
@@ -25,3 +25,5 @@ def sentence_validator(text):
 test_text = "Sed placerat ligula libero! Donec eu blandit mi. Sed sed nisi ipsum. Donec facilisis sagittis enim, a dignissim augue gravida at. Nullam quis diam scelerisque, sodales ante ac, condimentum nibh? "
 a = sentence_validator(test_text)
 print(a)
+
+
