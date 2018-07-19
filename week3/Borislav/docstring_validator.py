@@ -46,5 +46,5 @@ def som_func():      # The function of which we read docstring
     pass
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     som_func()

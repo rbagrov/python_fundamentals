@@ -36,6 +36,6 @@ def som_func(a: str, b: int) -> str:
     return('Done !!!')
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     som_func('Borislav', 13)  # Called function with Correct Annotation
     som_func('Borislav', "13")  # Called function with Incorrect Anotation
