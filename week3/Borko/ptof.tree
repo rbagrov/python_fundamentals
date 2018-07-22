@@ -1,0 +1,27 @@
+event: ns : Nanoseconds
+events: ns
+summary: 10009732000
+fl=/home/borislav/TeachHuddle/Course/python_fundamentals/week3/Borko/memory_profiler.py
+fn=my_func
+31 6000
+cfl=~
+cfn=<built-in method builtins.print>
+calls=4 0
+31 80000
+cfl=~
+cfn=<built-in method time.sleep>
+calls=1 0
+31 10009646000
+
+fl=~
+fn=<built-in method builtins.print>
+0 80000
+
+fl=~
+fn=<built-in method time.sleep>
+0 10009646000
+
+fl=~
+fn=<method 'disable' of '_lsprof.Profiler' objects>
+0 0
+
