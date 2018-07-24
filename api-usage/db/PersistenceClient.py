@@ -1,5 +1,7 @@
 # This fie contains the persistence client
 
+import threading
+
 
 class PersistenceClient(object):
     """ This class is responsible for communication between
@@ -8,25 +10,23 @@ class PersistenceClient(object):
         :param connection - which database is used
         :param process - the process that created this object
     """
-    def __init__(self, logger, thread, connection):
+    def __init__(self, logger, connection):
         self.logger = logger
-        self.thread = thread
-        self.lock = thread.Lock()
         self.connection = connection
+        self.lock = threading.Lock()
 
     def create_table(self, sql_command):
         """ This method creates a table in the database specified from connection
             :param sql_command: the sql command for creating a table
         """
         try:
-            self.logger.info('creating table')
+            self.logger.info('{} - creating table'.format(threading.current_thread().name)) # noqa
             self.lock.acquire()
             c = self.connection.cursor()
             c.execute(sql_command)
             self.connection.commit()
-            self.connection.close()
             self.lock.release()
-            self.logger.info('table created successfully')
+            self.logger.info('{} - table created successfully'.format(threading.current_thread().name)) # noqa
         except Exception as e:
             self.logger.info(e)
 
@@ -38,13 +38,16 @@ class PersistenceClient(object):
             :param item: the item to search for
         """
         try:
-            self.logger.info('Getting item')
+            self.logger.info('{} - Getting item'.format(threading.current_thread().name)) # noqa
             c = self.connection.cursor()
             c.execute(sql_command, item)
             result = c.fetchall()
-            self.connection.close()
-            self.logger.info('Found items, returning them')
-            return result
+            if not result:
+                self.logger.info('{} - Items not found, returning None'.format(threading.current_thread().name)) # noqa
+                return None
+            else:
+                self.logger.info('{} - Found items, returning them'.format(threading.current_thread().name)) # noqa
+                return result
         except Exception as e:
             self.logger.info(e)
 
@@ -58,14 +61,13 @@ class PersistenceClient(object):
             something in the db
         """
         try:
-            self.logger.info('inserting item in table')
+            self.logger.info('{} - inserting item in table'.format(threading.current_thread().name)) # noqa
             self.lock.acquire()
             c = self.connection.cursor()
             c.execute(sql_command, item)
             self.connection.commit()
-            self.connection.close()
             self.lock.release()
-            self.logger.info('item successfully added')
+            self.logger.info('{} - item successfully added'.format(threading.current_thread().name)) # noqa
         except Exception as e:
             self.logger.info(e)
 
@@ -78,14 +80,13 @@ class PersistenceClient(object):
             :param item: list of values to update
         """
         try:
-            self.logger.info('updating item in table')
+            self.logger.info('{} - updating item in table'.format(threading.current_thread().name)) # noqa
             self.lock.acquire()
             c = self.connection.cursor()
             c.execute(sql_command, item)
             self.connection.commit()
-            self.connection.close()
             self.lock.release()
-            self.logger.info('item successfully updated')
+            self.logger.info('{} - item successfully updated'.format(threading.current_thread().name)) # noqa
         except Exception as e:
             self.logger.info(e)
 
@@ -98,14 +99,23 @@ class PersistenceClient(object):
             :param item: the item to delete
         """
         try:
-            self.logger.info('deleting item from table')
+            self.logger.info('{} - deleting item from table'.format(threading.current_thread().name)) # noqa
             self.lock.acquire()
             c = self.connection.cursor()
             c.execute(sql_command, item)
             self.connection.commit()
-            self.connection.close()
             self.lock.release()
-            self.logger.info('item successfully deleted')
+            self.logger.info('{} - item successfully deleted'.format(threading.current_thread().name)) # noqa
+        except Exception as e:
+            self.logger.info(e)
+
+        return None
+
+    def close(self):
+        try:
+            self.logger.info('{} - closing db connection'.format(threading.current_thread().name)) # noqa
+            self.connection.close()
+            self.logger.info('{} - connection closed'.format(threading.current_thread().name)) # noqa
         except Exception as e:
             self.logger.info(e)
 

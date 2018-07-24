@@ -3,13 +3,13 @@
 
 import functools
 import hashlib
-from datetime import datetime
 
 
-DEFAULT_EXPIRATION = 60
+DEFAULT_EXPIRATION = 3600
 
 
 class Cache(object):
+    """ Class implementing cache using redis """
     def __init__(self, client, logger):
         self.client = client
         self.logger = logger
@@ -24,8 +24,6 @@ class Cache(object):
                     self.logger.info('item not found in cache')
                     self.logger.info('calling {}'.format(fn.__name__))
                     res = fn(*args, **kwargs)
-                    time_cached = datetime.now().strftime('%Y-%m-%d %H:%M:%S"')
-                    res['time_cached'] = time_cached
                     self.logger.info('caching response from {}'.format(fn.__name__)) # noqa
                     self.client.put_item(fn_hash, res)
                     self.client.invalidate_item(fn_hash, DEFAULT_EXPIRATION)
@@ -38,6 +36,7 @@ class Cache(object):
         return wrapper
 
     def _generate_cache_key(self, fn, fn_args=None, fn_kwargs=None):
+        """ private method - generates key for item """
         fn_args = fn_args or []
         fn_kwargs = fn_kwargs or {}
         fn_name = fn.__name__
@@ -46,6 +45,7 @@ class Cache(object):
         return fn_hash
 
     def _signature_generator(self, *args, **kwargs):
+        """ private method - returns string with joined fn params """
         parsed_args = ",".join(map(str, args))
 
         parsed_kwargs = ",".join(
