@@ -3,7 +3,7 @@
 
 import functools
 import hashlib
-
+import threading
 
 DEFAULT_EXPIRATION = 3600
 
@@ -13,6 +13,7 @@ class Cache(object):
     def __init__(self, client, logger):
         self.client = client
         self.logger = logger
+        self.lock = threading.Lock()
 
     def cache(self, fn):
         @functools.wraps(fn)
@@ -21,15 +22,17 @@ class Cache(object):
             try:
                 cache_responce = self.client.get_item(fn_hash)
                 if cache_responce is None:
-                    self.logger.info('item not found in cache')
+                    self.logger.info('{} - item not found in cache'.format(threading.current_thread().name)) # noqa
                     self.logger.info('calling {}'.format(fn.__name__))
                     res = fn(*args, **kwargs)
-                    self.logger.info('caching response from {}'.format(fn.__name__)) # noqa
+                    self.logger.info('{} - caching response from {}'.format(threading.current_thread().name, fn.__name__)) # noqa
+                    self.lock.acquire()
                     self.client.put_item(fn_hash, res)
+                    self.lock.release()
                     self.client.invalidate_item(fn_hash, DEFAULT_EXPIRATION)
                     return res
                 else:
-                    self.logger.info('item in cache')
+                    self.logger.info('{} - item in cache'.format(threading.current_thread().name))  # noqa
                     return cache_responce
             except Exception as e:
                 self.logger.info(e)
