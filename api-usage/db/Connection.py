@@ -1,8 +1,7 @@
 # This file contains db connection creator
 
 import sqlite3
-
-# The connecion is in RAM memory for now
+import threading
 
 
 class Connection(object):
@@ -15,29 +14,35 @@ class Connection(object):
         self.logger = logger
 
     def connect(self):
+        """ This method creates and return a db connection """
         try:
-            self.logger.info('connecting to database')
+            self.logger.info('{} - connecting to database'.format(threading.current_thread().name)) # noqa
             conn = sqlite3.connect(self.db_file)
-            self.logger.info('connection successfully created')
+            self.logger.info('{} - connection successfully created'.format(threading.current_thread().name)) # noqa
+            self.conn = conn
             return conn
         except Exception as e:
             self.logger.info(e)
 
+        return None
+
     def commit(self):
+        """ This method commits actions to db """
         try:
-            self.logger.info('commiting action to database')
+            self.logger.info('{} - commiting action to database'.format(threading.current_thread().name)) # noqa
             self.conn.commit()
-            self.logger.info('commited successfully')
+            self.logger.info('{} - commited successfully'.format(threading.current_thread().name)) # noqa
         except Exception as e:
             self.logger.info(e)
 
         return None
 
     def close(self):
+        """ This method closes the connection to the db """
         try:
-            self.logger.info('closing connection to database')
+            self.logger.info('{} - closing connection to database'.format(threading.current_thread().name)) # noqa
             self.conn.close()
-            self.logger.info('connection to database closed')
+            self.logger.info('{} - connection to database closed'.format(threading.current_thread().name)) # noqa
         except Exception as e:
             self.logger.info(e)
 

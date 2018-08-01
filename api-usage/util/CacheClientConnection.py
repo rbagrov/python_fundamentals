@@ -11,6 +11,7 @@ class CacheClientConnection(object):
         self._logger = logger
 
     def get_connection(self):
+        """ method for getting redis connection """
         try:
             self._logger.info('creating connection to redis')
             conn = redis.StrictRedis(self._host, self._port, self._db)
